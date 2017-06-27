@@ -1,8 +1,13 @@
 package com.qainfotech.tap.training.resourceio.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import com.qainfotech.tap.training.resourceio.TeamsJsonReader;
 
 /**
  *
@@ -13,9 +18,31 @@ public class Team {
     private final String name;
     private final Integer id;
     private final List<Individual> members;
+
     
     public Team(Map<String, Object> teamMap){
-        throw new UnsupportedOperationException("Not implemented.");
+    	Object[] values = teamMap.values().toArray();
+    	JSONObject jsonObject=new JSONObject();
+    	 jsonObject=(JSONObject) values[0];
+    	this.name=jsonObject.get("name").toString();
+    	this.id=Integer.parseInt(jsonObject.get("id").toString());
+    	this.members=new ArrayList<>();
+    	List<Individual> arrayOfIndividuals = null;
+			arrayOfIndividuals = (new TeamsJsonReader()).getListOfIndividuals();
+    	JSONArray memberArray=(JSONArray) jsonObject.get("members");
+    	Iterator<Individual> iterate=arrayOfIndividuals.iterator();
+    	while(iterate.hasNext()){
+    		Individual individual=iterate.next();
+    		for(int i=0;i<memberArray.size();i++){
+    			if(individual.getId()==Integer.parseInt(memberArray.get(i).toString())){
+    				members.add(individual);
+    			}
+    			}
+    		if(individual==null)
+    			throw new UnsupportedOperationException("Not implemented.");
+    			}
+if(members ==null )
+	  throw new UnsupportedOperationException("Not implemented.");
     }
     
     /**
@@ -51,7 +78,16 @@ public class Team {
      * @return 
      */
     public List<Individual> getActiveMembers(){
-        throw new UnsupportedOperationException("Not implemented.");
+    	//  throw new UnsupportedOperationException("Not implemented.");
+    	List<Individual> activeMembersOfTeam=new ArrayList<>();
+    	Iterator<Individual> iterate=this.members.iterator();
+    	while(iterate.hasNext()){
+    		Individual individual=iterate.next();
+    		if(individual.isActive()){
+    			activeMembersOfTeam.add(individual);
+    		}
+    	}
+    	return activeMembersOfTeam;
     }
         
     /**
@@ -60,6 +96,15 @@ public class Team {
      * @return 
      */
     public List<Individual> getInactiveMembers(){
-        throw new UnsupportedOperationException("Not implemented.");
+    	//throw new UnsupportedOperationException("Not implemented.");
+    	List<Individual> inactiveMembersListOfTeam=new ArrayList<>();
+    	Iterator<Individual>iterate=this.members.iterator();
+    	while(iterate.hasNext()){
+    		Individual individual=iterate.next();
+    		if(!(individual.isActive())){
+    			inactiveMembersListOfTeam.add(individual);
+    		}
+    	}
+    	return inactiveMembersListOfTeam;
     }
 }
