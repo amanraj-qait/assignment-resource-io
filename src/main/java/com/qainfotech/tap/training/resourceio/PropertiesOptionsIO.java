@@ -13,18 +13,28 @@ import java.io.OutputStream;
 public class PropertiesOptionsIO {
 
 	Properties prop = new Properties();
-
+/**
+ * Reading value from file options.properties
+ * @param optionKey
+ * @return getValue
+ * @throws IOException
+ */
 	public Object getOptionValue(String optionKey) throws IOException {
 
 		InputStream input = null;
 
 		input = getClass().getClassLoader().getResourceAsStream("options.properties");
 		prop.load(input);
-		Object a = prop.getProperty(optionKey);
+		Object getValue = prop.getProperty(optionKey);
 
-		return a;
+		return getValue;
 	}
-
+/**
+ * Writing value to file options.properties
+ * @param optionKey
+ * @param optionValue
+ * @throws IOException
+ */
 	public void addOption(String optionKey, Object optionValue) throws IOException {
 		OutputStream output = null;
 		output = new FileOutputStream(
