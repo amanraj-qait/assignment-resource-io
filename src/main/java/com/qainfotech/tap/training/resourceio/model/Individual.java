@@ -14,6 +14,11 @@ public class Individual {
 	private final Integer id;
 	private final Boolean active;
 
+	/**
+	 * Initialized global variables
+	 * 
+	 * @param individualMap
+	 */
 	public Individual(Map<String, Object> individualMap) {
 		Object[] values = individualMap.values().toArray();
 		JSONObject jsonObject = new JSONObject();
