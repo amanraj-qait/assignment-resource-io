@@ -56,8 +56,8 @@ public class TeamsJsonReader {
 		individualList = new ArrayList<>();
 		JSONArray individual = (JSONArray) jsonObject.get("individuals");
 		Map<String, Object> input = new HashMap<String, Object>();
-		for (int i = 0; i < individual.size(); i++) {
-			JSONObject ob = (JSONObject) individual.get(i);
+		for (int inputloop = 0; inputloop < individual.size(); inputloop++) {
+			JSONObject ob = (JSONObject) individual.get(inputloop);
 			input.put("1", ob);
 			Individual newindividual = new Individual(input);
 			if (newindividual != null)
