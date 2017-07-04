@@ -2,8 +2,6 @@ package com.qainfotech.tap.training.resourceio.model;
 
 import java.util.Map;
 
-import org.json.simple.JSONObject;
-
 /**
  *
  * @author Ramandeep RamandeepSingh AT QAInfoTech.com
@@ -21,11 +19,12 @@ public class Individual {
 	 */
 	public Individual(Map<String, Object> individualMap) {
 		Object[] values = individualMap.values().toArray();
-		JSONObject jsonObject = new JSONObject();
-		jsonObject = (JSONObject) values[0];
-		this.name = jsonObject.get("name").toString();
-		this.id = Integer.parseInt(jsonObject.get("id").toString());
-		this.active = (Boolean) jsonObject.get("active");
+		@SuppressWarnings("unused")
+		Object jsonObject = new Object();
+		jsonObject = (Object) values[0];
+		this.name = (String) individualMap.get("name");
+		this.id = (Integer) (individualMap).get("id");
+		this.active = (Boolean) individualMap.get("active");
 		if (values[0] == null)
 			throw new UnsupportedOperationException("Not implemented.");
 	}

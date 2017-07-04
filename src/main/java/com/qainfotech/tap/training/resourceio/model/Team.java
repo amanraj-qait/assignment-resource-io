@@ -5,10 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import com.qainfotech.tap.training.resourceio.TeamsJsonReader;
-
 /**
  *
  * @author Ramandeep RamandeepSingh AT QAInfoTech.com
@@ -24,27 +20,11 @@ public class Team {
 	 * 
 	 * @param teamMap
 	 */
+	@SuppressWarnings("unchecked")
 	public Team(Map<String, Object> teamMap) {
-		Object[] values = teamMap.values().toArray();
-		JSONObject jsonObject = new JSONObject();
-		jsonObject = (JSONObject) values[0];
-		this.name = jsonObject.get("name").toString();
-		this.id = Integer.parseInt(jsonObject.get("id").toString());
-		this.members = new ArrayList<>();
-		List<Individual> arrayOfIndividuals = null;
-		arrayOfIndividuals = (new TeamsJsonReader()).getListOfIndividuals();
-		JSONArray memberArray = (JSONArray) jsonObject.get("members");
-		Iterator<Individual> iterate = arrayOfIndividuals.iterator();
-		while (iterate.hasNext()) {
-			Individual individual = iterate.next();
-			for (int i = 0; i < memberArray.size(); i++) {
-				if (individual.getId() == Integer.parseInt(memberArray.get(i).toString())) {
-					members.add(individual);
-				}
-			}
-			if (individual == null)
-				throw new UnsupportedOperationException("Not implemented.");
-		}
+		this.name=(String) teamMap.get("name");
+	       this.id=(Integer) teamMap.get("id");
+	       this.members=  (List<Individual>) teamMap.get("members");
 		if (members == null)
 			throw new UnsupportedOperationException("Not implemented.");
 	}

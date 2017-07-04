@@ -6,7 +6,11 @@ package com.qainfotech.tap.training.resourceio.exceptions;
  */
 public class ObjectNotFoundException extends Exception{
     
-    public ObjectNotFoundException(String type, String key, String value){
+    /**
+	 * 
+	 */
+
+	public ObjectNotFoundException(String type, String key, String value){
         super(type + " Object with "+key+"="+value+" not found");
     }
     

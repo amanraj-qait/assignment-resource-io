@@ -4,7 +4,6 @@ import com.qainfotech.tap.training.resourceio.exceptions.ObjectNotFoundException
 import com.qainfotech.tap.training.resourceio.model.Individual;
 import com.qainfotech.tap.training.resourceio.model.Team;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -30,6 +29,7 @@ public class TeamsJsonReader {
 	List<Team> teamList;
 	List<Team> members;
 	private Individual newindividual;
+	JSONParser parser = new JSONParser();
 
 	/**
 	 * get a list of individual objects from db json file
@@ -40,34 +40,30 @@ public class TeamsJsonReader {
 	 * @throws FileNotFoundException
 	 */
 	public List<Individual> getListOfIndividuals() {
-		JSONParser parser = new JSONParser();
-		FileReader readfile = null;
-		try {
-			readfile = new FileReader(new File(
-					"C:\\Users\\amanraj\\workspace\\assignment-resource-io-master\\src\\test\\resources\\db.json"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			jsonObject = (JSONObject) parser.parse(readfile);
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
-		}
 		individualList = new ArrayList<>();
-		JSONArray individual = (JSONArray) jsonObject.get("individuals");
-		Map<String, Object> input = new HashMap<String, Object>();
-		for (int inputloop = 0; inputloop < individual.size(); inputloop++) {
-			JSONObject ob = (JSONObject) individual.get(inputloop);
-			input.put("1", ob);
-			Individual newindividual = new Individual(input);
-			if (newindividual != null)
-				individualList.add(newindividual);
-			input.remove("1");
-		}
-		if (individualList == null)
-			throw new UnsupportedOperationException("Not implemented.");
-		return individualList;
-
+		Map<String, Object> input = null;
+	       Object reader = null;
+			Individual newIndividual1= null;
+			JSONObject object = null;
+			input = new HashMap<String, Object>();
+			try {
+				reader = parser.parse(new FileReader("src/main/resources/db.json"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			JSONObject jsonObject = (JSONObject) reader;
+			JSONArray individual = (JSONArray) jsonObject.get("individuals");
+			for (int inputloop = 0; inputloop < individual.size(); inputloop++) {
+				object = (JSONObject) individual.get(inputloop);
+				input.put("name", object.get("name"));
+				input.put("id", ((Long) object.get("id")).intValue());
+				input.put("active", object.get("active"));
+				newIndividual1 = new Individual(input);
+				 individualList.add(newIndividual1);
+			}
+			if (individualList == null)
+				throw new UnsupportedOperationException("Not implemented.");
+			return individualList;
 	}
 
 	/**
@@ -179,35 +175,31 @@ public class TeamsJsonReader {
 	 * @throws FileNotFoundException
 	 */
 	public List<Team> getListOfTeams() {
-		JSONParser parser = new JSONParser();
-		FileReader readfile = null;
-		try {
-			readfile = new FileReader(new File(
-					"C:\\Users\\amanraj\\workspace\\assignment-resource-io-master\\src\\test\\resources\\db.json"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			jsonObject = (JSONObject) parser.parse(readfile);
-		} catch (IOException | ParseException e) {
-			e.printStackTrace();
-		}
+        Object obj = null;
+		Map<String, Object> input1 = new HashMap<String, Object>();
+		JSONObject object = null;
 		teamList = new ArrayList<>();
-		JSONArray teams = (JSONArray) jsonObject.get("teams");
-		Map<String, Object> input = new HashMap<String, Object>();
-		for (int i = 0; i < teams.size(); i++) {
-			JSONObject ob = (JSONObject) teams.get(i);
-			input.put("1", ob);
-			Team newindividual = null;
-			newindividual = new Team(input);
-			if (newindividual != null)
-				teamList.add(newindividual);
-			input.remove("1");
+		TeamsJsonReader reader = new TeamsJsonReader();
+		try {
+			obj = parser.parse(new FileReader("src/main/resources/db.json"));
+		    jsonObject = (JSONObject) obj;
+			JSONArray teams = (JSONArray) jsonObject.get("teams");
+			for (int index = 0; index < teams.size(); index++) {
+				List<Individual> individualList = new ArrayList<>();
+				object = (JSONObject) teams.get(index);
+				input1.put("name", object.get("name"));
+				input1.put("id", ((Long) object.get("id")).intValue());
+				JSONArray memberArray = (JSONArray) object.get("members");
+				for (int loc = 0; loc < memberArray.size(); loc++) {
+					individualList.add(reader.getIndividualById(((Long) memberArray.get(loc)).intValue()));
+				}
+				input1.put("members", individualList);
+				teamList.add(new Team(input1));
+			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		if (teamList == null)
-			throw new UnsupportedOperationException("Not implemented.");
 		return teamList;
+    }
 	}
-
-}
