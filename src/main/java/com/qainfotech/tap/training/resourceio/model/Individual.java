@@ -18,14 +18,10 @@ public class Individual {
 	 * @param individualMap
 	 */
 	public Individual(Map<String, Object> individualMap) {
-		Object[] values = individualMap.values().toArray();
-		@SuppressWarnings("unused")
-		Object jsonObject = new Object();
-		jsonObject = (Object) values[0];
 		this.name = (String) individualMap.get("name");
 		this.id = (Integer) (individualMap).get("id");
 		this.active = (Boolean) individualMap.get("active");
-		if (values[0] == null)
+		if (name == null)
 			throw new UnsupportedOperationException("Not implemented.");
 	}
 
